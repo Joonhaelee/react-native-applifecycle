@@ -23,6 +23,7 @@
 import {useEffect, useState} from 'react';
 
 import AppLifecycle from './AppLifecycle';
+import {AppStateStatusEx} from './AndroidLifecycleModule';
 
 /**
  * A hook to get the current app state.
@@ -30,7 +31,9 @@ import AppLifecycle from './AppLifecycle';
  * @returns The current app state.
  */
 const useAppLifecycle = () => {
-  const [appState, setAppState] = useState(AppLifecycle.currentState);
+  const [appState, setAppState] = useState<AppStateStatusEx>(
+    AppLifecycle.currentState,
+  );
 
   useEffect(() => {
     const listener = AppLifecycle.addEventListener('change', state => {

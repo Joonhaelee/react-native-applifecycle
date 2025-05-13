@@ -35,12 +35,19 @@ const ON_STOP_EVENT = 'ON_STOP';
 
 const CHANGE_EVENT_HANDLERS: EventHandlerType[] = [];
 
-export type EventHandlerType = (state: AppStateStatus) => void;
+export type AppStateStatusEx = AppStateStatus | 'stop' | 'start';
+// | 'active'
+// | 'background'
+// | 'inactive'
+// | 'unknown'
+// | 'extension';
+
+export type EventHandlerType = (state: AppStateStatusEx) => void;
 type LifecycleEventType = {
   type: typeof ON_START_EVENT | typeof ON_STOP_EVENT;
 };
 
-let currentState: AppStateStatus = AppState.currentState;
+let currentState: AppStateStatusEx = AppState.currentState;
 
 const subscribeToEvent = (
   handler: EventHandlerType,
@@ -68,7 +75,10 @@ const addEventListener = (
   return AppState.addEventListener(event, handler);
 };
 
-const dispatchEvent = (oldState: AppStateStatus, newState: AppStateStatus) => {
+const dispatchEvent = (
+  oldState: AppStateStatusEx,
+  newState: AppStateStatusEx,
+) => {
   if (oldState === newState) {
     return;
   }
@@ -81,10 +91,12 @@ eventEmitter.addListener(NATIVE_MODULE_NAME, (event: LifecycleEventType) => {
   const oldState = currentState;
   switch (event.type) {
     case ON_START_EVENT:
-      currentState = 'active';
+      // currentState = 'active';
+      currentState = 'start';
       break;
     case ON_STOP_EVENT:
-      currentState = 'background';
+      // currentState = 'background';
+      currentState = 'stop';
       break;
     default:
       currentState = 'unknown';
@@ -94,7 +106,7 @@ eventEmitter.addListener(NATIVE_MODULE_NAME, (event: LifecycleEventType) => {
 
 const AndroidLifecycleModule = {
   addEventListener,
-  get currentState(): AppStateStatus {
+  get currentState(): AppStateStatusEx {
     return currentState;
   },
   get isAvailable(): boolean {

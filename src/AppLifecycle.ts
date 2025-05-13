@@ -22,13 +22,16 @@
 
 import {
   AppState,
-  AppStateStatus,
+  // AppStateStatus,
   Platform,
   AppStateEvent,
   NativeEventSubscription,
 } from 'react-native';
 
-import type {EventHandlerType} from './AndroidLifecycleModule';
+import type {
+  AppStateStatusEx,
+  EventHandlerType,
+} from './AndroidLifecycleModule';
 
 const AppLifecycle = {
   /**
@@ -48,7 +51,7 @@ const AppLifecycle = {
   /**
    * Returns the current app state.
    */
-  get currentState(): AppStateStatus {
+  get currentState(): AppStateStatusEx {
     return Platform.OS === 'android'
       ? require('./AndroidLifecycleModule').default.currentState
       : AppState.currentState;
